@@ -89,7 +89,7 @@ class qa_blog
 	$postid = qa_request_part(1);
 	if (isset($postid)) {
 		$result = qa_db_query_sub('SELECT * FROM ^blog_posts WHERE `postid` LIKE #', $postid);
-		if ($row = mysql_fetch_array($result)) {
+		if ($row = mysqli_fetch_array($result)) {
 			qa_db_query_sub('UPDATE ^blog_posts SET Views = Views + 1 WHERE `postid` LIKE #', $postid);
 			$qa_content['title']= $row['title'];
 			$qa_content['custom']= "";
@@ -106,14 +106,14 @@ class qa_blog
 			$at = $date->format('H:i');
 			$parentid = $postid;
 			$result = qa_db_query_sub("SELECT COUNT(*) as total FROM ^blog_comments WHERE `parentid` LIKE #", $parentid);
-			$countdata = mysql_fetch_assoc($result);
+			$countdata = mysqli_fetch_assoc($result);
 			$count = $countdata['total'];
 			$delete = "<a href='".qa_path_to_root()."/edit/".$postid."'/>
-			<img src='".qa_opt('qa_site_url')."/qa-plugin/blog-post/images/delete.png'> Delete </a>";
+			<img src='".qa_opt('site_url')."qa-plugin/blog-post/images/delete.png'> Delete </a>";
 			$edit = "<a href='".qa_path_to_root()."/edit/".$postid."'/>
-			<img src='".qa_opt('qa_site_url')."/qa-plugin/blog-post/images/edit.png'> Edit </a>";
+			<img src='".qa_opt('site_url')."qa-plugin/blog-post/images/edit.png'> Edit </a>";
 			$flag = "<a href='#'/>
-			<img src='".qa_opt('qa_site_url')."/qa-plugin/blog-post/images/edit.png'> Flag </a>";
+			<img src='".qa_opt('site_url')."qa-plugin/blog-post/images/edit.png'> Flag </a>";
 			$comments = qa_lang('qa_blog_lang/post_comments');
 			$queryName = qa_db_read_one_assoc( qa_db_query_sub('SELECT content
 											FROM `^userprofile`
@@ -122,7 +122,7 @@ class qa_blog
 											LIMIT 0,#;', $user), true );
 			$name = (isset($queryName['content']) && trim($queryName['content'])!='') ? $queryName['content'] : $author;
 			$result = qa_db_query_sub('SELECT * FROM ^users WHERE userid=#',$user);
-				if ($row = mysql_fetch_array($result)) {
+				if ($row = mysqli_fetch_array($result)) {
 				$fullname = '<a href="/user/'.$row['handle'].'">'.$name.'</a>';	
 				}
 			if(qa_is_logged_in())
@@ -145,11 +145,11 @@ class qa_blog
 					<span style='float:right;padding-right:10px;'>".$count." ".$comments." | ".$row['views']." ".$strviews."</span>
 					<br>";
 			
-			 $html .= "<h2>Comments features is not available in free version</h2>";
+#			 $html .= "<h2>Comments features is not available in free version</h2>";
 			$parentid = qa_request_part(1);
 			$result = qa_db_query_sub("SELECT * FROM ^blog_comments WHERE parentid =  '$parentid' ");	
 			$i=0;
-			while ($blob = mysql_fetch_array($result)) {
+			while ($blob = mysqli_fetch_array($result)) {
 			$i++;
 			$html .= "<p> ".$blob['comment']."</span><br>".qa_lang('qa_blog_lang/comment')."
 					".$author." ".qa_lang('qa_blog_lang/on')." ".$on." ".qa_lang('qa_blog_lang/at')."
@@ -189,12 +189,12 @@ class qa_blog
 	if (isset($_GET['page'])) $page = $_GET['page'];
 		$limit = 10;
 	if (isset($_GET['category'])) 
-		$result = qa_db_query_sub("SELECT * FROM ^blog_posts WHERE type=# WHERE format='markdown'
+		$result = qa_db_query_sub("SELECT * FROM ^blog_posts WHERE type=# and format='markdown'
 		ORDER BY posted DESC LIMIT #,#",$cat,($page-1)*$limit,$limit);
 	else 
 		$result = qa_db_query_sub("SELECT * FROM ^blog_posts  WHERE format='markdown' ORDER BY posted DESC LIMIT #,#",($page-1)*$limit,$limit);
 		$i=0;
-		while ($article = mysql_fetch_array($result)) {
+		while ($article = mysqli_fetch_array($result)) {
 			$i++;
 			$author = $article['userid'];
 			if ($article['userid'] == 0) $author = qa_lang('qa_blog_lang/userid_null');
@@ -211,7 +211,7 @@ class qa_blog
 		else {
 			if (isset($_GET['category'])) $result = qa_db_query_sub("SELECT COUNT(*) as total FROM ^blog_posts WHERE type=#",$cat);
 			else $result = qa_db_query_sub("SELECT COUNT(*) as total FROM ^blog_posts");
-			$countdata = mysql_fetch_assoc($result);
+			$countdata = mysqli_fetch_assoc($result);
 			$count = $countdata['total'];
 			
 			if ($count/$limit > 1) {
@@ -259,8 +259,8 @@ function article_item_with_author($title,$link,$content,$author,$date,$views,$ty
 	$level=qa_get_logged_in_level();
 	
 	if($level>=QA_USER_LEVEL_MODERATOR) {
-	$edit = '<a href="'.qa_opt('qa_site_url').'/edit/'.$postid.'"/>
-	<img src="'.qa_opt('qa_site_url').'/qa-plugin/blog-post/images/edit.png"> Edit</a>';
+	$edit = '<a href="'.qa_opt('site_url').'/edit/'.$postid.'"/>
+	<img src="'.qa_opt('site_url').'/qa-plugin/blog-post/images/edit.png"> Edit</a>';
 	}
 	else $edit = '';
 	$user = $author;
@@ -270,7 +270,7 @@ function article_item_with_author($title,$link,$content,$author,$date,$views,$ty
 	$more = ' . . . <strong><a href="'.$link.'">Read more</a></strong>'; 
 	$parentid = $postid;
 	$result = qa_db_query_sub("SELECT COUNT(*) as total FROM ^blog_comments WHERE `parentid` LIKE #", $parentid);
-	$countdata = mysql_fetch_assoc($result);
+	$countdata = mysqli_fetch_assoc($result);
 	$count = $countdata['total'];
 	$comments = qa_lang('qa_blog_lang/post_comments');
 	$cl = $count.$comments;
@@ -293,7 +293,7 @@ function article_item_with_author($title,$link,$content,$author,$date,$views,$ty
 											LIMIT 0,#;', $user), true );
 	$name = (isset($queryName['content']) && trim($queryName['content'])!='') ? $queryName['content'] : $author;
 	$result = qa_db_query_sub('SELECT * FROM ^users WHERE userid=#',$user);
-	if ($row = mysql_fetch_array($result)) {
+	if ($row = mysqli_fetch_array($result)) {
 		$fullname = '<a href="/user/'.$row['handle'].'">'.$name.'</a>';		
 		$pic = '<a href="user/'.$row['handle'].'">
 					<img style="border-radius:20px;" src="?qa=image&qa_blobid='.$row['avatarblobid'].'&qa_size=100"/></a>';
@@ -312,8 +312,8 @@ function article_item_with_author($title,$link,$content,$author,$date,$views,$ty
 					<table>
 					<tr><td></td><td>
 						Posted in '.$category.' '.$on.' | 
-						<img src="'.qa_opt('qa_site_url').'/qa-plugin/blog-post/images/comment.png"> '.$cl.'
-						<img src="'.qa_opt('qa_site_url').'/qa-plugin/blog-post/images/hits.jpg"> '.$vl.' 						
+						<img src="'.qa_opt('site_url').'/qa-plugin/blog-post/images/comment.png"> '.$cl.'
+						<img src="'.qa_opt('site_url').'/qa-plugin/blog-post/images/hits.jpg"> '.$vl.' 						
 						'.$edit.'
 						</td></tr></table></td></tr>
 				</table><br>
@@ -324,7 +324,7 @@ function article_item_with_author($title,$link,$content,$author,$date,$views,$ty
 
 function handleLinkForID($id) {
 	$result = qa_db_query_sub('SELECT * FROM ^users WHERE userid=#',$id);
-	if ($row = mysql_fetch_array($result)) {
+	if ($row = mysqli_fetch_array($result)) {
 		return '<a href="/user/'.$row['handle'].'">@'.$row['handle'].'</a>';
 	}
 	return 'anonymous';

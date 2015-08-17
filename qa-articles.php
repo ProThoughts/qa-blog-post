@@ -258,7 +258,7 @@ class qa_articles
 			$result = qa_db_query_sub("SELECT * FROM ^blog_posts WHERE userid =  '$userid' ORDER BY posted DESC");
 					
 			$i=0;
-			while ($blob = mysql_fetch_array($result)) {
+			while ($blob = mysqli_fetch_array($result)) {
 			$i++;
 			$html .= '<ul><li><h3><a href="blog/'.$blob['postid'].'/'.seoUrl3($blob['title']).'">'.$blob['title'].'</a><h3></li></ul>';
 			}

@@ -42,7 +42,11 @@ class qa_edit
 
 	public function match_request( $request )
 	{
-		return strpos($request, 'edit') !== false;
+		$parts=explode('/', $request);
+
+                return $parts[0]=='edit';
+
+//		return strpos($request, 'edit') !== false;
 	}
 	
 	public function process_request( $request )
@@ -60,7 +64,7 @@ class qa_edit
 	$postid = qa_request_part(1);
 	if (isset($postid)) {
 		$result = qa_db_query_sub('SELECT * FROM ^blog_posts WHERE `postid` LIKE #', $postid);
-		if ($row = mysql_fetch_array($result)) {
+		if ($row = mysqli_fetch_array($result)) {
 			$userid = $row['userid'];
 			$author =  handleLinkForID($row['userid']);
 			$editor =qa_get_logged_in_userid();
@@ -245,7 +249,7 @@ class qa_edit
 				$result = qa_db_query_sub("SELECT * FROM ^blog_posts WHERE userid =  '$userid' ORDER BY posted DESC");
 					
 				$i=0;
-				while ($blob = mysql_fetch_array($result)) {
+				while ($blob = mysqli_fetch_array($result)) {
 				$i++;
 				$html .= '<ul><li><h3><a href="blog/'.$blob['postid'].'/'.seoUrl3($blob['title']).'">'.$blob['title'].'</a><h3></li></ul>';
 				}
@@ -257,7 +261,7 @@ class qa_edit
 		}
 		else
 		{
-		$site_url =  qa_opt('qa_site_url');
+		$site_url =  qa_opt('site_url');
 		$qa_content['title']= qa_lang('qa_blog_lang/title_error');
 		$qa_content['error'] =  qa_lang('qa_blog_lang/edit_error').'<a href='.$site_url.'/blog/>
 		'.qa_lang('qa_blog_lang/edit_error1').'</a>';

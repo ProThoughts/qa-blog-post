@@ -70,7 +70,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 					));
 				}
 			}
-			$site_url = qa_opt('qa_site_url');
+			$site_url = qa_opt('site_url');
 			// RENEW THE SUB-NAVIGATION
 			unset($this->content['navigation']['sub']);
 			$this->content['navigation']['sub']['account'] = array(	'label' => 'User '.$handle,
@@ -105,7 +105,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 					$html = "";					
 					$result = qa_db_query_sub("SELECT * FROM ^blog_posts WHERE userid =  '$userid' ORDER BY posted DESC");
 					$i=0;
-					while ($article = mysql_fetch_array($result)) {
+					while ($article = mysqli_fetch_array($result)) {
 					$i++;
 					$html .= article_item($article['title'], $site_url.'/blog/'.$article['postid'].'/'.seoUrl2($article['title']).'/',$article['posted'],$article['views']);
 					}
