@@ -36,6 +36,8 @@ class qa_edit
 		return array(
 			array(
 				'request' => 'edit',
+                                'title' => 'Blog',
+                                'nav' => 'M', // 'M'=main, 'F'=footer, 'B'=before main, 'O'=opposite main, null=none
 			),
 		);
 	}
