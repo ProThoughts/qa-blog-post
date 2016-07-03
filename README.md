@@ -15,13 +15,15 @@ FEATURES OF THE BLOG POST PLUGIN
 
 REQUIREMENTS 
 1. Question2Answer 1.5 and over.
-2. Markdown Editor to display articles after they are posted.
 
 
 INSTALLATION 
 1. Download the blog post plugin from the download link indicated.
 2. Extract the files to your location of choice on your computer.
 3. Go to plugins >> and locate the blog post plugin. YOU MUST CONFIGURE IT FIRST SO THAT IT CAN WORK!
-9. Then you can now use it as you wish.
+4. Then you can now use it as you wish.
+
+Warning
+The blog plugin is quite limited and no longer supported. Since 5 categories was no way sufficient for my Q2A I'm no longer using this plugin and hence please do not request me for any bug fix. 
 
 
